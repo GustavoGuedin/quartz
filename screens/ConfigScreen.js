@@ -1,21 +1,51 @@
-import { Text, Card, Divider, List, Icon, Portal, Dialog, Button, RadioButton, useTheme } from 'react-native-paper';
+import { Divider, List, Portal, Dialog, RadioButton, useTheme, Button, Text } from 'react-native-paper';
 import { View } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ConfigScreen = () => {
   const theme = useTheme();
+
+  const [inputValue, setInputValue] = useState('');
+  const [storedValue, setStoredValue] = useState('');
 
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  const [tamanhoPeca, setTamanhoPeca] = useState('60x60')
+  const [tamanhoPeca, setTamanhoPeca] = useState('')
+
+  const saveData = async (key, val) => {
+    try {
+      await AsyncStorage.setItem(key, val);
+      console.log('Valor salvo com sucesso');
+    } catch (error) {
+      console.error('Erro ao salvar o valor:', error)
+    }
+  }
+
+  const loadData = async (key, variable) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        variable(value);
+      } else {
+        console.log('Nenhum valor encontrado')
+      }
+    } catch (error) {
+      console.error('Erro ao ler o valor: ', error)
+    }
+  }
+
+  useEffect(() =>{
+    loadData('@tamanhoPeca', setTamanhoPeca);
+  }, []);
 
   const TamanhoPecaDialog = () => {
     return (
       <View>
         <Portal style={{}}>
-          <Dialog visible={visible} onDismiss={hideDialog}>
+          <Dialog visible={visible} onDismiss={() => {hideDialog(); saveData('@tamanhoPeca', tamanhoPeca); }}>
             <Dialog.Title>Tamanho da peça</Dialog.Title>
             <Dialog.Content>
               <RadioButton.Group onValueChange={tamanhoPeca => setTamanhoPeca(tamanhoPeca)} value={tamanhoPeca}>
@@ -24,7 +54,7 @@ const ConfigScreen = () => {
               </RadioButton.Group>
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={hideDialog}>Concluído</Button>
+              <Button onPress={() => {saveData('@tamanhoPeca', tamanhoPeca); hideDialog(); }}>Concluído</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>

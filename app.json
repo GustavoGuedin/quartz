@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "quartz",
+    "name": "Quartz",
     "slug": "quartz",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#323232"
       },
       "package": "com.gustavoguedin.quartz"
     },
