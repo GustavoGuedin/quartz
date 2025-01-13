@@ -4,10 +4,12 @@ import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navig
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Appbar } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HomeScreen from '../screens/HomeScreen';
 import ConfigScreen from '../screens/ConfigScreen';
-import HistoryScreen from '../screens/HistoryScreen';
+import PartialScreen from '../screens/PartialScreen';
+import InputTileScreen from '../screens/InputTileScreen';
 
 function CustomNavigationBar({ navigation, route, options, back }) {
   const title = getHeaderTitle(options, route.name);
@@ -16,7 +18,8 @@ function CustomNavigationBar({ navigation, route, options, back }) {
     <Appbar.Header>
       {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
       <Appbar.Content title={title} />
-      {!back ? <Appbar.Action icon="cog" onPress={() => navigation.navigate('Configurações')} /> : null}
+      {!back ? <Appbar.Action icon="trash-can-outline" onLongPress={() => AsyncStorage.clear()} /> : null}
+      {!back ? <Appbar.Action icon="cog-outline" onPress={() => navigation.navigate('Configurações')} /> : null}
     </Appbar.Header>
   )
 }
@@ -27,17 +30,17 @@ const Tab = createMaterialBottomTabNavigator();
 function TabBar() {
   return (
     <Tab.Navigator>
-        <Tab.Screen name="Calcular" component={HomeScreen} options={{ 
+        <Tab.Screen name="Cálculo rápido" component={HomeScreen} options={{ 
           tabBarIcon: ({color}) => {
             return <Icon name="calculator" size={24} color={color}/>; 
           }, 
           }} 
         />
-        <Tab.Screen name="Histórico" component={HistoryScreen} options={{
+        <Tab.Screen name="Parcial" component={PartialScreen} options={{ 
           tabBarIcon: ({color}) => {
-            return <Icon name='history' size={24} color={color} />;
-          },
-          }}
+            return <Icon name="clipboard-list-outline" size={24} color={color}/>; 
+          }, 
+          }} 
         />
     </Tab.Navigator>
   )
@@ -52,6 +55,7 @@ const StackNavigator = () => {
         <Stack.Navigator screenOptions={{ header: (props) => <CustomNavigationBar {...props} /> }}>
             <Stack.Screen name="Quartz" component={TabBar} />
             <Stack.Screen name="Configurações" component={ConfigScreen} />
+            <Stack.Screen name="Adicionar parcial" component={InputTileScreen} />
         </Stack.Navigator>
     </NavigationContainer>
   )

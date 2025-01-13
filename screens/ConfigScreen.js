@@ -1,4 +1,4 @@
-import { Divider, List, Portal, Dialog, RadioButton, useTheme, Button, Text } from 'react-native-paper';
+import { Divider, List, Portal, Dialog, RadioButton, useTheme, Button } from 'react-native-paper';
 import { View } from 'react-native';
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,18 +6,18 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ConfigScreen = () => {
   const theme = useTheme();
 
-  const [inputValue, setInputValue] = useState('');
-  const [storedValue, setStoredValue] = useState('');
-
+  const [selectedDialog, setSelectedDialog] = useState("");
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
 
-  const [tamanhoPeca, setTamanhoPeca] = useState('')
+  const [tileSize, setTileSize] = useState("");
+  const [line, setLine] = useState("");
+  const [shift, setShift] = useState("");
 
-  const saveData = async (key, val) => {
+  const saveData = async (key, value) => {
     try {
-      await AsyncStorage.setItem(key, val);
+      await AsyncStorage.setItem(key, value);
       console.log('Valor salvo com sucesso');
     } catch (error) {
       console.error('Erro ao salvar o valor:', error)
@@ -38,23 +38,87 @@ const ConfigScreen = () => {
   }
 
   useEffect(() =>{
-    loadData('@tamanhoPeca', setTamanhoPeca);
+    loadData('@tile_size', setTileSize);
+    loadData('@line', setLine);
+    loadData('@shift', setShift);
   }, []);
 
-  const TamanhoPecaDialog = () => {
+  const TileSizeDialog = () => {
     return (
       <View>
-        <Portal style={{}}>
-          <Dialog visible={visible} onDismiss={() => {hideDialog(); saveData('@tamanhoPeca', tamanhoPeca); }}>
+        <Portal>
+          <Dialog visible={visible} onDismiss={() => {hideDialog()}}>
             <Dialog.Title>Tamanho da peça</Dialog.Title>
             <Dialog.Content>
-              <RadioButton.Group onValueChange={tamanhoPeca => setTamanhoPeca(tamanhoPeca)} value={tamanhoPeca}>
+              <RadioButton.Group 
+                onValueChange={
+                  tileSize => {setTileSize(tileSize); 
+                  saveData('@tile_size', tileSize); 
+                  hideDialog()}} 
+                value={tileSize}
+              >
                 <RadioButton.Item label='60x60' value='60x60' />
                 <RadioButton.Item label='84x84' value='84x84' />
               </RadioButton.Group>
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={() => {saveData('@tamanhoPeca', tamanhoPeca); hideDialog(); }}>Concluído</Button>
+              <Button onPress={() => {hideDialog(); }}>Cancelar</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </View>
+    )
+  }
+
+  const LineDialog = () => {
+    return (
+      <View>
+        <Portal>
+          <Dialog visible={visible} onDismiss={() => {hideDialog()}}>
+            <Dialog.Title>Linha de produção</Dialog.Title>
+            <Dialog.Content>
+              <RadioButton.Group 
+                onValueChange={
+                  line => {setLine(line); 
+                  saveData('@line', line); 
+                  hideDialog()}} 
+                value={line}
+              >
+                <RadioButton.Item label='Linha 1' value='1' />
+                <RadioButton.Item label='Linha 2' value='2' />
+                <RadioButton.Item label='Linha 3' value='3' />
+              </RadioButton.Group>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => {hideDialog(); }}>Cancelar</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+      </View>
+    )
+  }
+
+  const ShiftDialog = () => {
+    return (
+      <View>
+        <Portal>
+          <Dialog visible={visible} onDismiss={() => {hideDialog()}}>
+            <Dialog.Title>Turno de trabalho</Dialog.Title>
+            <Dialog.Content>
+              <RadioButton.Group 
+                onValueChange={
+                  shift => {setShift(shift); 
+                  saveData('@shift', shift); 
+                  hideDialog()}} 
+                value={shift}
+              >
+                <RadioButton.Item label='Turno A' value='A' />
+                <RadioButton.Item label='Turno B' value='B' />
+                <RadioButton.Item label='Turno C' value='C' />
+              </RadioButton.Group>
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={() => {hideDialog(); }}>Cancelar</Button>
             </Dialog.Actions>
           </Dialog>
         </Portal>
@@ -67,24 +131,40 @@ const ConfigScreen = () => {
 
         <List.Item
           title="Tamanho da peça"
-          description={tamanhoPeca}
-          onPress={showDialog}
+          description={tileSize}
+          onPress={() => { setSelectedDialog("tileSize"); showDialog() }}
         />
         
         <Divider />
 
         <List.Item
-          title="Linha"
-          description="linha"
+          title="Linha de produção"
+          description={"Linha " + line}
+          onPress={() => { setSelectedDialog("line"); showDialog() }}
         />
 
         <Divider />
 
         <List.Item
-          title="Turno"
-          description="turno"
+          title="Turno de trabalho"
+          description={"Turno " + shift}
+          onPress={() => { setSelectedDialog("shift"); showDialog() }}
         />
-      <TamanhoPecaDialog />
+
+        <Button 
+          mode='contained' 
+          style={{margin: 12, backgroundColor: theme.colors.error}} 
+          onPress={() => AsyncStorage.clear()}
+        >
+          Apagar todos os dados
+        </Button>
+      { 
+        selectedDialog == "tileSize"
+          ? <TileSizeDialog />
+          : selectedDialog == "line"
+            ? <LineDialog />
+            : <ShiftDialog />
+      }
     </View>
   );
 }

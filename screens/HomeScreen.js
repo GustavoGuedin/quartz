@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Text, TextInput, Card, FAB } from 'react-native-paper';
 import { View } from 'react-native';
 import styles from '../styles/Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = () => {
     const [tamanhoPeca, setTamanhoPeca] = useState('');
@@ -34,9 +35,11 @@ const HomeScreen = () => {
       }
     }
   
-    useEffect(() =>{
-      loadData('@tamanhoPeca', setTamanhoPeca);
-    }, []);
+    useFocusEffect(
+      useCallback(() =>{
+        loadData('@tile_size', setTamanhoPeca);
+      }, [])
+    );
 
     useEffect(() => {
       if (tamanhoPeca === '60x60') {
@@ -47,7 +50,7 @@ const HomeScreen = () => {
     }, [tamanhoPeca]);
   
     return (
-      <View style={{height: '100%'}}>
+      <View style={styles.fullscreen}>
         <View style={styles.container}>
   
           <View style={styles.textInput}>
@@ -68,8 +71,6 @@ const HomeScreen = () => {
               style={{width: '48%'}} 
             />
           </View>
-  
-          <Button mode='contained' style={{display: 'none'}}>Calcular</Button>
   
           <Card>
             <Card.Content>
