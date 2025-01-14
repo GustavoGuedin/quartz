@@ -1,6 +1,6 @@
 import { ScrollView, View } from "react-native";
 import styles from "../styles/Styles";
-import { Card, Chip, Divider, FAB, Icon, List, Text, useTheme } from "react-native-paper";
+import { Card, Chip, Divider, FAB, Icon, List, SegmentedButtons, Text, useTheme } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
@@ -114,7 +114,6 @@ const PartialScreen = ({ navigation }) => {
             loadData('@productionC_lineB_hour3', setProductionCLineBHour3);
             loadData('@productionC_lineB_hour4', setProductionCLineBHour4);
             loadData('@productionC_lineB_hour5', setProductionCLineBHour5);
-
         }, [])
     );
     
@@ -126,75 +125,10 @@ const PartialScreen = ({ navigation }) => {
         }
     }, [tileSize]);
 
-    return(
-        <View style={styles.fullscreen}>
-            <ScrollView>
-                <View style={styles.container}>
-                    <View style={styles.chip}>
-                        { productionACLineA[0] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(1)}} 
-                                style={selectedHour == 1 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                6:00
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[1] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(2)}} 
-                                style={selectedHour == 2 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                7:30
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[2] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(3)}} 
-                                style={selectedHour == 3 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                9:00
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[3] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(4)}} 
-                                style={selectedHour == 4 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                10:30
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[4] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(5)}} 
-                                style={selectedHour == 5 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                12:00
-                            </Chip> 
-                        : null }
-                    </View>
-
-                    { productionACLineA[selectedHour - 1] ? <View>
-
-                    <List.Accordion
+    const ProductionCards = () => {
+        return (
+            <View>
+                <List.Accordion
                         title="Linha 1A"
                         right={() => expandedA ? <List.Icon icon="chevron-up" /> : <List.Icon icon="chevron-down" />}
                         expanded={expandedA}
@@ -361,9 +295,111 @@ const PartialScreen = ({ navigation }) => {
                         </Card>
                     </View>
 
-                    </List.Accordion>
+                </List.Accordion>
+            </View>
+        )
+    }
 
-                    </View> : null }
+    return(
+        <View style={styles.fullscreen}>
+            <ScrollView>
+                <View style={styles.container}>
+                    {/* <View style={styles.chip}>
+                        { productionACLineA[0] ? 
+                            <Chip 
+                                onPress={() => {setSelectedHour(1)}} 
+                                style={selectedHour == 1 ? 
+                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
+                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
+                                }
+                            >
+                                6:00
+                            </Chip> 
+                        : null }
+
+                        { productionACLineA[1] ? 
+                            <Chip 
+                                onPress={() => {setSelectedHour(2)}} 
+                                style={selectedHour == 2 ? 
+                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
+                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
+                                }
+                            >
+                                7:30
+                            </Chip> 
+                        : null }
+
+                        { productionACLineA[2] ? 
+                            <Chip 
+                                onPress={() => {setSelectedHour(3)}} 
+                                style={selectedHour == 3 ? 
+                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
+                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
+                                }
+                            >
+                                9:00
+                            </Chip> 
+                        : null }
+
+                        { productionACLineA[3] ? 
+                            <Chip 
+                                onPress={() => {setSelectedHour(4)}} 
+                                style={selectedHour == 4 ? 
+                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
+                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
+                                }
+                            >
+                                10:30
+                            </Chip> 
+                        : null }
+
+                        { productionACLineA[4] ? 
+                            <Chip 
+                                onPress={() => {setSelectedHour(5)}} 
+                                style={selectedHour == 5 ? 
+                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
+                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
+                                }
+                            >
+                                12:00
+                            </Chip> 
+                        : null }
+                    </View> */}
+
+                    <View style={{flex: 1, alignItems: "center", display: productionACLineAHour1 ? "flex" : "none" }}>
+                        <SegmentedButtons
+                            value={selectedHour}
+                            onValueChange={setSelectedHour}
+                            buttons={[
+                                {
+                                    label: "6:00",
+                                    value: 1
+                                },
+                                {
+                                    label: "7:30",
+                                    value: 2,
+                                    disabled: productionACLineAHour2 ? false : true
+                                },
+                                {
+                                    label: "9:00",
+                                    value: 3,
+                                    disabled: productionACLineAHour3 ? false : true
+                                },
+                                {
+                                    label: "10:30",
+                                    value: 4,
+                                    disabled: productionACLineAHour4 ? false : true
+                                },
+                                {
+                                    label: "12:00",
+                                    value: 5,
+                                    disabled: productionACLineAHour5 ? false : true
+                                },
+                            ]}
+                        />
+                    </View>
+
+                    { productionACLineA[selectedHour - 1] ? <ProductionCards /> : null }
 
                 </View>
                 <View style={{marginVertical: 32}} />

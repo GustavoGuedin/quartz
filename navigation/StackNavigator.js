@@ -4,7 +4,6 @@ import { createMaterialBottomTabNavigator } from 'react-native-paper/react-navig
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Appbar } from 'react-native-paper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HomeScreen from '../screens/HomeScreen';
 import ConfigScreen from '../screens/ConfigScreen';
@@ -18,7 +17,6 @@ function CustomNavigationBar({ navigation, route, options, back }) {
     <Appbar.Header>
       {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
       <Appbar.Content title={title} />
-      {!back ? <Appbar.Action icon="trash-can-outline" onLongPress={() => AsyncStorage.clear()} /> : null}
       {!back ? <Appbar.Action icon="cog-outline" onPress={() => navigation.navigate('Configurações')} /> : null}
     </Appbar.Header>
   )

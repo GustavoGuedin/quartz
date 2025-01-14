@@ -114,9 +114,10 @@ const InputTileScreen = ({navigation}) => {
                     onChangeText={inputCLineB => setInputCLineB(inputCLineB)}
                 />
 
-                {!inputACLineA || !inputACLineB || !inputCLineA || !inputCLineB 
-                ? <Button mode="contained" disabled>Salvar</Button> 
-                : <Button mode="contained" onPress={() => {saveValues(); navigation.goBack()}}>Salvar</Button> }
+                <Button mode="contained" 
+                    disabled={ !inputACLineA || !inputACLineB || !inputCLineA || !inputCLineB ? true : false }
+                    onPress={() => {saveValues(); navigation.goBack()}}
+                >Salvar</Button>
             </View>
         </View>
     )
