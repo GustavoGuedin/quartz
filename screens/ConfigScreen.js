@@ -59,6 +59,9 @@ const ConfigScreen = () => {
               >
                 <RadioButton.Item label='60x60' value='60x60' />
                 <RadioButton.Item label='84x84' value='84x84' />
+                <RadioButton.Item label='60x120' value='60x120' />
+                <RadioButton.Item label='50x100' value='50x100' />
+                <RadioButton.Item label='49x99' value='49x99' />
               </RadioButton.Group>
             </Dialog.Content>
             <Dialog.Actions>
@@ -150,14 +153,6 @@ const ConfigScreen = () => {
           description={"Turno " + shift}
           onPress={() => { setSelectedDialog("shift"); showDialog() }}
         />
-
-        <Button 
-          mode='contained' 
-          style={{margin: 12, backgroundColor: theme.colors.error}} 
-          onPress={() => AsyncStorage.clear()}
-        >
-          Apagar todos os dados
-        </Button>
       { 
         selectedDialog == "tileSize"
           ? <TileSizeDialog />

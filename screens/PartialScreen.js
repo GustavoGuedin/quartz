@@ -1,6 +1,6 @@
 import { ScrollView, View } from "react-native";
 import styles from "../styles/Styles";
-import { Card, Chip, Divider, FAB, Icon, List, SegmentedButtons, Text, useTheme } from "react-native-paper";
+import { Button, Card, Divider, FAB, Icon, List, SegmentedButtons, Text, useTheme, Portal, Dialog } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
@@ -85,6 +85,14 @@ const PartialScreen = ({ navigation }) => {
         }
     }
 
+    const deleteData = async (key) => {
+        try {
+            await AsyncStorage.removeItem(key);
+        } catch (error) {
+            console.error("Erro ao excluir", error)
+        }
+    }
+
     useFocusEffect(
         useCallback(() =>{
             loadData('@tile_size', setTileSize);
@@ -122,8 +130,16 @@ const PartialScreen = ({ navigation }) => {
         setTileSizeMetreage(0.36);
         } else if (tileSize === '84x84') {
         setTileSizeMetreage(0.7067);
+        } else if (tileSize === '60x120') {
+        setTileSizeMetreage(0.72);
+        } else if (tileSize === '50x100') {
+        setTileSizeMetreage(0.5);
+        } else if (tileSize === '49x99') {
+        setTileSizeMetreage(0.48);
         }
     }, [tileSize]);
+
+
 
     const ProductionCards = () => {
         return (
@@ -293,9 +309,97 @@ const PartialScreen = ({ navigation }) => {
                                 </Text>
                             </Card.Content>
                         </Card>
+                        <Button mode="contained" style={{backgroundColor: theme.colors.error, width: "100%", marginVertical: 16}} onPress={() => showDialog()}>Zerar contagens</Button>
                     </View>
 
                 </List.Accordion>
+                <ResetDialog />
+            </View>
+        )
+    }
+
+    const EmptyProduction = () => {
+        return(
+            <View style={{marginTop: "50%"}}>
+                <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+                    <Icon source="clipboard-text-off-outline" size={100} />
+                    <Text variant="titleLarge" style={{fontWeight: "bold", textAlign: "center"}}>Nenhuma parcial adicionada</Text>
+                    <Text style={{textAlign: "center"}}>Toque em "Adicionar parcial" para adicionar a primeira</Text>
+                </View>
+            </View>
+        )
+    }
+
+    const [visible, setVisible] = useState(false);
+    const showDialog = () => setVisible(true);
+    const hideDialog = () => setVisible(false);
+
+    const ResetData = () => {
+        deleteData("@productionAC_lineA_hour1")
+        deleteData("@productionAC_lineA_hour2")
+        deleteData("@productionAC_lineA_hour3")
+        deleteData("@productionAC_lineA_hour4")
+        deleteData("@productionAC_lineA_hour5")
+
+        deleteData("@productionC_lineA_hour1")
+        deleteData("@productionC_lineA_hour2")
+        deleteData("@productionC_lineA_hour3")
+        deleteData("@productionC_lineA_hour4")
+        deleteData("@productionC_lineA_hour5")
+
+        deleteData("@productionAC_lineB_hour1")
+        deleteData("@productionAC_lineB_hour2")
+        deleteData("@productionAC_lineB_hour3")
+        deleteData("@productionAC_lineB_hour4")
+        deleteData("@productionAC_lineB_hour5")
+
+        deleteData("@productionC_lineB_hour1")
+        deleteData("@productionC_lineB_hour2")
+        deleteData("@productionC_lineB_hour3")
+        deleteData("@productionC_lineB_hour4")
+        deleteData("@productionC_lineB_hour5")
+
+        setProductionACLineAHour1("")
+        setProductionACLineAHour2("")
+        setProductionACLineAHour3("")
+        setProductionACLineAHour4("")
+        setProductionACLineAHour5("")
+
+        setProductionCLineAHour1("")
+        setProductionCLineAHour2("")
+        setProductionCLineAHour3("")
+        setProductionCLineAHour4("")
+        setProductionCLineAHour5("")
+
+        setProductionACLineBHour1("")
+        setProductionACLineBHour2("")
+        setProductionACLineBHour3("")
+        setProductionACLineBHour4("")
+        setProductionACLineBHour5("")
+
+        setProductionCLineBHour1("")
+        setProductionCLineBHour2("")
+        setProductionCLineBHour3("")
+        setProductionCLineBHour4("")
+        setProductionCLineBHour5("")
+
+    }
+
+    const ResetDialog = () => {
+        return (
+            <View>
+              <Portal>
+                <Dialog visible={visible} onDismiss={() => {hideDialog()}}>
+                  <Dialog.Title>Atenção</Dialog.Title>
+                  <Dialog.Content>
+                    <Text>Você tem certeza que deseja zerar as contagens?</Text>
+                  </Dialog.Content>
+                  <Dialog.Actions>
+                    <Button onPress={() => {hideDialog()}}>Não</Button>
+                    <Button onPress={() => {ResetData(); hideDialog()}}>Sim</Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
             </View>
         )
     }
@@ -304,68 +408,6 @@ const PartialScreen = ({ navigation }) => {
         <View style={styles.fullscreen}>
             <ScrollView>
                 <View style={styles.container}>
-                    {/* <View style={styles.chip}>
-                        { productionACLineA[0] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(1)}} 
-                                style={selectedHour == 1 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                6:00
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[1] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(2)}} 
-                                style={selectedHour == 2 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                7:30
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[2] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(3)}} 
-                                style={selectedHour == 3 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                9:00
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[3] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(4)}} 
-                                style={selectedHour == 4 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                10:30
-                            </Chip> 
-                        : null }
-
-                        { productionACLineA[4] ? 
-                            <Chip 
-                                onPress={() => {setSelectedHour(5)}} 
-                                style={selectedHour == 5 ? 
-                                    {marginRight: 8, backgroundColor: theme.colors.primaryContainer} : 
-                                    {marginRight: 8, backgroundColor: theme.colors.surfaceDisabled}
-                                }
-                            >
-                                12:00
-                            </Chip> 
-                        : null }
-                    </View> */}
-
                     <View style={{flex: 1, alignItems: "center", display: productionACLineAHour1 ? "flex" : "none" }}>
                         <SegmentedButtons
                             value={selectedHour}
@@ -399,8 +441,7 @@ const PartialScreen = ({ navigation }) => {
                         />
                     </View>
 
-                    { productionACLineA[selectedHour - 1] ? <ProductionCards /> : null }
-
+                    { productionACLineA[selectedHour - 1] ? <ProductionCards /> : <EmptyProduction /> }
                 </View>
                 <View style={{marginVertical: 32}} />
             </ScrollView>

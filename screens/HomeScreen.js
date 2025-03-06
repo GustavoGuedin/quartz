@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Button, Text, TextInput, Card, FAB } from 'react-native-paper';
+import { Text, TextInput, Card, FAB } from 'react-native-paper';
 import { View } from 'react-native';
 import styles from '../styles/Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,9 +43,15 @@ const HomeScreen = () => {
 
     useEffect(() => {
       if (tamanhoPeca === '60x60') {
-        setTamanhoPecaMetragem(0.36);
+      setTamanhoPecaMetragem(0.36);
       } else if (tamanhoPeca === '84x84') {
-        setTamanhoPecaMetragem(0.7067);
+      setTamanhoPecaMetragem(0.7067);
+      } else if (tamanhoPeca === '60x120') {
+      setTamanhoPecaMetragem(0.72);
+      } else if (tamanhoPeca === '50x100') {
+      setTamanhoPecaMetragem(0.5);
+      } else if (tamanhoPeca === '49x99') {
+      setTamanhoPecaMetragem(0.48);
       }
     }, [tamanhoPeca]);
   

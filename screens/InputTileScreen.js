@@ -117,6 +117,7 @@ const InputTileScreen = ({navigation}) => {
                 <Button mode="contained" 
                     disabled={ !inputACLineA || !inputACLineB || !inputCLineA || !inputCLineB ? true : false }
                     onPress={() => {saveValues(); navigation.goBack()}}
+                    style={{backgroundColor: !inputACLineA || !inputACLineB || !inputCLineA || !inputCLineB ? theme.colors.surfaceDisabled : theme.colors.primary}}
                 >Salvar</Button>
             </View>
         </View>
