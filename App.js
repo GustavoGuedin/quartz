@@ -3,6 +3,8 @@ import { useColorScheme } from 'react-native';
 import { PaperProvider, MD3DarkTheme, MD3LightTheme } from 'react-native-paper';
 import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import StackNavigator from './navigation/StackNavigator';
+import { SettingsProvider } from './contexts/SettingsContext';
+import { DataProvider } from './contexts/DataContext';
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -14,8 +16,12 @@ export default function App() {
       : { ...MD3LightTheme, colors: theme.light };
 
   return (
-    <PaperProvider theme={paperTheme}>
-        <StackNavigator />
-    </PaperProvider>
+    <DataProvider>
+      <SettingsProvider>
+        <PaperProvider theme={paperTheme}>
+            <StackNavigator />
+        </PaperProvider>
+      </SettingsProvider>
+    </DataProvider>
   );
 }

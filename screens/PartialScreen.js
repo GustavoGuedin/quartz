@@ -1,73 +1,51 @@
 import { ScrollView, View } from "react-native";
 import styles from "../styles/Styles";
-import { Button, Card, Divider, FAB, Icon, List, SegmentedButtons, Text, useTheme, Portal, Dialog } from "react-native-paper";
+import { Card, Divider, FAB, Icon, List, SegmentedButtons, Text } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
-import { useCallback, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { SettingsContext } from "../contexts/SettingsContext";
+import { DataContext } from "../contexts/DataContext";
 
 const PartialScreen = ({ navigation }) => {
-    const theme = useTheme();
+    const {
+        tileSize, setTileSize,
+        line, setLine,
+        shift, setShift
+    } = useContext(SettingsContext);
 
-    const [tileSize, setTileSize] = useState("");
-    const [line, setLine] = useState("");
-    const [shift, setShift] = useState("");
+    const {
+        productionACLineAHour1, setProductionACLineAHour1,
+        productionACLineAHour2, setProductionACLineAHour2,
+        productionACLineAHour3, setProductionACLineAHour3,
+        productionACLineAHour4, setProductionACLineAHour4,
+        productionACLineAHour5, setProductionACLineAHour5,
+
+        productionACLineBHour1, setProductionACLineBHour1,
+        productionACLineBHour2, setProductionACLineBHour2,
+        productionACLineBHour3, setProductionACLineBHour3,
+        productionACLineBHour4, setProductionACLineBHour4,
+        productionACLineBHour5, setProductionACLineBHour5,
+
+        productionACLineA,
+        productionACLineB,
+
+        productionCLineAHour1, setProductionCLineAHour1,
+        productionCLineAHour2, setProductionCLineAHour2,
+        productionCLineAHour3, setProductionCLineAHour3,
+        productionCLineAHour4, setProductionCLineAHour4,
+        productionCLineAHour5, setProductionCLineAHour5,
+
+        productionCLineBHour1, setProductionCLineBHour1,
+        productionCLineBHour2, setProductionCLineBHour2,
+        productionCLineBHour3, setProductionCLineBHour3,
+        productionCLineBHour4, setProductionCLineBHour4,
+        productionCLineBHour5, setProductionCLineBHour5,
+
+        productionCLineA,
+        productionCLineB
+    } = useContext(DataContext);
+
     const [tileSizeMetreage, setTileSizeMetreage] = useState("");
-
-    const [productionACLineAHour1, setProductionACLineAHour1] = useState("");
-    const [productionACLineAHour2, setProductionACLineAHour2] = useState("");
-    const [productionACLineAHour3, setProductionACLineAHour3] = useState("");
-    const [productionACLineAHour4, setProductionACLineAHour4] = useState("");
-    const [productionACLineAHour5, setProductionACLineAHour5] = useState("");
-
-    const [productionACLineBHour1, setProductionACLineBHour1] = useState("");
-    const [productionACLineBHour2, setProductionACLineBHour2] = useState("");
-    const [productionACLineBHour3, setProductionACLineBHour3] = useState("");
-    const [productionACLineBHour4, setProductionACLineBHour4] = useState("");
-    const [productionACLineBHour5, setProductionACLineBHour5] = useState("");
-
-    const productionACLineA = [
-        productionACLineAHour1,
-        productionACLineAHour2,
-        productionACLineAHour3,
-        productionACLineAHour4,
-        productionACLineAHour5
-    ]
-
-    const productionACLineB = [
-        productionACLineBHour1,
-        productionACLineBHour2,
-        productionACLineBHour3,
-        productionACLineBHour4,
-        productionACLineBHour5
-    ]
-    
-    const [productionCLineAHour1, setProductionCLineAHour1] = useState("");
-    const [productionCLineAHour2, setProductionCLineAHour2] = useState("");
-    const [productionCLineAHour3, setProductionCLineAHour3] = useState("");
-    const [productionCLineAHour4, setProductionCLineAHour4] = useState("");
-    const [productionCLineAHour5, setProductionCLineAHour5] = useState("");
-
-    const [productionCLineBHour1, setProductionCLineBHour1] = useState("");
-    const [productionCLineBHour2, setProductionCLineBHour2] = useState("");
-    const [productionCLineBHour3, setProductionCLineBHour3] = useState("");
-    const [productionCLineBHour4, setProductionCLineBHour4] = useState("");
-    const [productionCLineBHour5, setProductionCLineBHour5] = useState("");
-
-    const productionCLineA = [
-        productionCLineAHour1,
-        productionCLineAHour2,
-        productionCLineAHour3,
-        productionCLineAHour4,
-        productionCLineAHour5
-    ]
-
-    const productionCLineB = [
-        productionCLineBHour1,
-        productionCLineBHour2,
-        productionCLineBHour3,
-        productionCLineBHour4,
-        productionCLineBHour5
-    ]
 
     const [selectedHour, setSelectedHour] = useState(1);
 
@@ -85,45 +63,35 @@ const PartialScreen = ({ navigation }) => {
         }
     }
 
-    const deleteData = async (key) => {
-        try {
-            await AsyncStorage.removeItem(key);
-        } catch (error) {
-            console.error("Erro ao excluir", error)
-        }
-    }
+    useEffect(() =>{
+        loadData('@tile_size', setTileSize);
+        loadData('@line', setLine);
+        loadData('@shift', setShift);
 
-    useFocusEffect(
-        useCallback(() =>{
-            loadData('@tile_size', setTileSize);
-            loadData('@line', setLine);
-            loadData('@shift', setShift);
+        loadData('@productionAC_lineA_hour1', setProductionACLineAHour1);
+        loadData('@productionAC_lineA_hour2', setProductionACLineAHour2);
+        loadData('@productionAC_lineA_hour3', setProductionACLineAHour3);
+        loadData('@productionAC_lineA_hour4', setProductionACLineAHour4);
+        loadData('@productionAC_lineA_hour5', setProductionACLineAHour5);
 
-            loadData('@productionAC_lineA_hour1', setProductionACLineAHour1);
-            loadData('@productionAC_lineA_hour2', setProductionACLineAHour2);
-            loadData('@productionAC_lineA_hour3', setProductionACLineAHour3);
-            loadData('@productionAC_lineA_hour4', setProductionACLineAHour4);
-            loadData('@productionAC_lineA_hour5', setProductionACLineAHour5);
+        loadData('@productionAC_lineB_hour1', setProductionACLineBHour1);
+        loadData('@productionAC_lineB_hour2', setProductionACLineBHour2);
+        loadData('@productionAC_lineB_hour3', setProductionACLineBHour3);
+        loadData('@productionAC_lineB_hour4', setProductionACLineBHour4);
+        loadData('@productionAC_lineB_hour5', setProductionACLineBHour5);
 
-            loadData('@productionAC_lineB_hour1', setProductionACLineBHour1);
-            loadData('@productionAC_lineB_hour2', setProductionACLineBHour2);
-            loadData('@productionAC_lineB_hour3', setProductionACLineBHour3);
-            loadData('@productionAC_lineB_hour4', setProductionACLineBHour4);
-            loadData('@productionAC_lineB_hour5', setProductionACLineBHour5);
+        loadData('@productionC_lineA_hour1', setProductionCLineAHour1);
+        loadData('@productionC_lineA_hour2', setProductionCLineAHour2);
+        loadData('@productionC_lineA_hour3', setProductionCLineAHour3);
+        loadData('@productionC_lineA_hour4', setProductionCLineAHour4);
+        loadData('@productionC_lineA_hour5', setProductionCLineAHour5);
 
-            loadData('@productionC_lineA_hour1', setProductionCLineAHour1);
-            loadData('@productionC_lineA_hour2', setProductionCLineAHour2);
-            loadData('@productionC_lineA_hour3', setProductionCLineAHour3);
-            loadData('@productionC_lineA_hour4', setProductionCLineAHour4);
-            loadData('@productionC_lineA_hour5', setProductionCLineAHour5);
-
-            loadData('@productionC_lineB_hour1', setProductionCLineBHour1);
-            loadData('@productionC_lineB_hour2', setProductionCLineBHour2);
-            loadData('@productionC_lineB_hour3', setProductionCLineBHour3);
-            loadData('@productionC_lineB_hour4', setProductionCLineBHour4);
-            loadData('@productionC_lineB_hour5', setProductionCLineBHour5);
-        }, [])
-    );
+        loadData('@productionC_lineB_hour1', setProductionCLineBHour1);
+        loadData('@productionC_lineB_hour2', setProductionCLineBHour2);
+        loadData('@productionC_lineB_hour3', setProductionCLineBHour3);
+        loadData('@productionC_lineB_hour4', setProductionCLineBHour4);
+        loadData('@productionC_lineB_hour5', setProductionCLineBHour5);
+    }, [])
     
     useEffect(() => {
         if (tileSize === '60x60') {
@@ -139,13 +107,11 @@ const PartialScreen = ({ navigation }) => {
         }
     }, [tileSize]);
 
-
-
     const ProductionCards = () => {
         return (
             <View>
                 <List.Accordion
-                        title="Linha 1A"
+                        title={ "Linha " + line + "A" }
                         right={() => expandedA ? <List.Icon icon="chevron-up" /> : <List.Icon icon="chevron-down" />}
                         expanded={expandedA}
                         onPress={() => setExpandedA(!expandedA)}
@@ -230,7 +196,7 @@ const PartialScreen = ({ navigation }) => {
                     </List.Accordion>
 
                     <List.Accordion
-                        title="Linha 1B"
+                        title={ "Linha " + line + "B" }
                         right={() => expandedB ? <List.Icon icon="chevron-up" /> : <List.Icon icon="chevron-down" />}
                         expanded={expandedB}
                         onPress={() => setExpandedB(!expandedB)}
@@ -309,11 +275,9 @@ const PartialScreen = ({ navigation }) => {
                                 </Text>
                             </Card.Content>
                         </Card>
-                        <Button mode="contained" style={{backgroundColor: theme.colors.error, width: "100%", marginVertical: 16}} onPress={() => showDialog()}>Zerar contagens</Button>
                     </View>
 
                 </List.Accordion>
-                <ResetDialog />
             </View>
         )
     }
@@ -326,80 +290,6 @@ const PartialScreen = ({ navigation }) => {
                     <Text variant="titleLarge" style={{fontWeight: "bold", textAlign: "center"}}>Nenhuma parcial adicionada</Text>
                     <Text style={{textAlign: "center"}}>Toque em "Adicionar parcial" para adicionar a primeira</Text>
                 </View>
-            </View>
-        )
-    }
-
-    const [visible, setVisible] = useState(false);
-    const showDialog = () => setVisible(true);
-    const hideDialog = () => setVisible(false);
-
-    const ResetData = () => {
-        deleteData("@productionAC_lineA_hour1")
-        deleteData("@productionAC_lineA_hour2")
-        deleteData("@productionAC_lineA_hour3")
-        deleteData("@productionAC_lineA_hour4")
-        deleteData("@productionAC_lineA_hour5")
-
-        deleteData("@productionC_lineA_hour1")
-        deleteData("@productionC_lineA_hour2")
-        deleteData("@productionC_lineA_hour3")
-        deleteData("@productionC_lineA_hour4")
-        deleteData("@productionC_lineA_hour5")
-
-        deleteData("@productionAC_lineB_hour1")
-        deleteData("@productionAC_lineB_hour2")
-        deleteData("@productionAC_lineB_hour3")
-        deleteData("@productionAC_lineB_hour4")
-        deleteData("@productionAC_lineB_hour5")
-
-        deleteData("@productionC_lineB_hour1")
-        deleteData("@productionC_lineB_hour2")
-        deleteData("@productionC_lineB_hour3")
-        deleteData("@productionC_lineB_hour4")
-        deleteData("@productionC_lineB_hour5")
-
-        setProductionACLineAHour1("")
-        setProductionACLineAHour2("")
-        setProductionACLineAHour3("")
-        setProductionACLineAHour4("")
-        setProductionACLineAHour5("")
-
-        setProductionCLineAHour1("")
-        setProductionCLineAHour2("")
-        setProductionCLineAHour3("")
-        setProductionCLineAHour4("")
-        setProductionCLineAHour5("")
-
-        setProductionACLineBHour1("")
-        setProductionACLineBHour2("")
-        setProductionACLineBHour3("")
-        setProductionACLineBHour4("")
-        setProductionACLineBHour5("")
-
-        setProductionCLineBHour1("")
-        setProductionCLineBHour2("")
-        setProductionCLineBHour3("")
-        setProductionCLineBHour4("")
-        setProductionCLineBHour5("")
-
-    }
-
-    const ResetDialog = () => {
-        return (
-            <View>
-              <Portal>
-                <Dialog visible={visible} onDismiss={() => {hideDialog()}}>
-                  <Dialog.Title>Atenção</Dialog.Title>
-                  <Dialog.Content>
-                    <Text>Você tem certeza que deseja zerar as contagens?</Text>
-                  </Dialog.Content>
-                  <Dialog.Actions>
-                    <Button onPress={() => {hideDialog()}}>Não</Button>
-                    <Button onPress={() => {ResetData(); hideDialog()}}>Sim</Button>
-                  </Dialog.Actions>
-                </Dialog>
-              </Portal>
             </View>
         )
     }
@@ -443,9 +333,9 @@ const PartialScreen = ({ navigation }) => {
 
                     { productionACLineA[selectedHour - 1] ? <ProductionCards /> : <EmptyProduction /> }
                 </View>
-                <View style={{marginVertical: 32}} />
+                { !productionACLineAHour5 ? <View style={{marginVertical: 32}} /> : null }
             </ScrollView>
-            <FAB icon="plus" label="Adicionar parcial" style={styles.fab} onPress={() => navigation.navigate("Adicionar parcial") } />
+            { !productionACLineAHour5 ? <FAB icon="plus" label="Adicionar parcial" style={styles.fab} onPress={() => navigation.navigate("Adicionar parcial") } /> : null }
         </View>
     )
 }

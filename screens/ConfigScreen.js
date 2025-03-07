@@ -1,19 +1,22 @@
 import { Divider, List, Portal, Dialog, RadioButton, useTheme, Button } from 'react-native-paper';
 import { View } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 const ConfigScreen = () => {
+  const {
+    tileSize, setTileSize,
+    line, setLine,
+    shift, setShift
+  } = useContext(SettingsContext);
+
   const theme = useTheme();
 
   const [selectedDialog, setSelectedDialog] = useState("");
   const [visible, setVisible] = useState(false);
   const showDialog = () => setVisible(true);
   const hideDialog = () => setVisible(false);
-
-  const [tileSize, setTileSize] = useState("");
-  const [line, setLine] = useState("");
-  const [shift, setShift] = useState("");
 
   const saveData = async (key, value) => {
     try {
