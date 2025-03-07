@@ -5,6 +5,7 @@ import { useMaterial3Theme } from '@pchmn/expo-material3-theme';
 import StackNavigator from './navigation/StackNavigator';
 import { SettingsProvider } from './contexts/SettingsContext';
 import { DataProvider } from './contexts/DataContext';
+import { StatusBar } from 'expo-status-bar';
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -19,7 +20,8 @@ export default function App() {
     <DataProvider>
       <SettingsProvider>
         <PaperProvider theme={paperTheme}>
-            <StackNavigator />
+          <StackNavigator />
+          <StatusBar style='auto' />
         </PaperProvider>
       </SettingsProvider>
     </DataProvider>
