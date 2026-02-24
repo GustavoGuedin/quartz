@@ -13,6 +13,7 @@ import ConfigScreen from '../screens/ConfigScreen';
 import PartialScreen from '../screens/PartialScreen';
 import InputTileScreen from '../screens/InputTileScreen';
 import AboutScreen from '../screens/AboutScreen';
+import BreakageScreen from '../screens/BreakageScreen';
 
 function CustomNavigationBar({ navigation, route, options, back }) {
   const title = getHeaderTitle(options, route.name);
@@ -146,9 +147,9 @@ function TabBar() {
           }, 
           }} 
         />
-        <Tab.Screen name="Configurações" component={ConfigScreen} options={{ 
+        <Tab.Screen name="Calcular quebra" component={BreakageScreen} options={{ 
           tabBarIcon: ({color}) => {
-            return <Icon name="cog-outline" size={24} color={color}/>; 
+            return <Icon name="calculator" size={24} color={color}/>; 
           }, 
           }} 
         />
